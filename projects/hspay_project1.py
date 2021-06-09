@@ -2,7 +2,7 @@
 
 print('What is your Purity Score?')
 
-questions= ["Had a crush? ","Held someone\'s hand? ","Talked about Star Wars to someone you liked? ","Do you know the Princess Bride? ","Do you like Anime? ","Do you like animals? ","Do you know the CSS"]
+questions= ["Had a crush? ","Held someone\'s hand? ","Talked about Star Wars to someone you liked? ","Do you know the Princess Bride? ","Do you like Anime? ","Do you like animals? "]
 
 ycount = 0
 
@@ -21,9 +21,10 @@ for x in questions:
       #      print(x)
        #     userInput = input('Yes/No').lower()
 
+#print(ycount)
+
 if ycount == 6:
     print("Non-purity Expert")
-
     
 if ycount == 4:
     print("Purity levels are decreasing")
