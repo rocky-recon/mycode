@@ -8,6 +8,11 @@ from random import randint
 import dice
 import os
 
+# Import hippo ASCII images. Used google to find ASCII hippo images
+#import hippo.txt
+#import start_game.txt
+#import game_over.txt
+
 """User Story 
     The User will select a room based on direction and collect items through a maze
  based of a house footprint.  
@@ -16,18 +21,19 @@ rom the evil Dependapotamus """
 
 '''The User health is low from working in the military.'''
 
-humans = [{'name' : 'Dependapotamus', 'health' : 100, 'damage' : '1d6'},
-          {'name' : 'Child', 'health' : 10, 'damage' : '1d4'}]
+humans = [{'name' : 'dependapotamus', 'health' : 100, 'damage' : '1d6'},
+          {'name' : 'child', 'health' : 10, 'damage' : '1d4'},
+          {'name': 'dog', 'health' : 50, 'damage' : '1d4'},]
 weapons = [{'dog poop' : {'damage' : '1d12'}},
            {'ps4' : {'damage' : '1d5'}}, 
-           {'xbox' : {'damage' : '1d5'}}]
-spell_lookup = [{'skoal wintergreen dip' : {'armor' : '1d12'}},
-          {'white muscle shirt' : {'armor' : '1d24'}},
-          {'self-esteem' : {'armor' : '1d5'}}]
+           {'xbox' : {'damage' : '1d5'}},]
+spell_lookup = [{'skoal wintergreen dip' : {'damage' : '1d12'}},
+          {'white muscle shirt' : {'damage' : '1d24'}},
+          {'self-esteem' : {'damage' : '1d5'}},]
 health = [{'monster energy drink' : {'health' : '1d4'}},
-        {'taco bell' : {'health' : '1d4'}}]
+        {'taco bell' : {'health' : '1d4'}},]
 
-player_health = 5
+player_health = 45
 inventory = []
 spellbook = []
 health_reserves = []
@@ -45,9 +51,11 @@ def _CQC():
         print(f"ROUND {round}")
         print("Player Health: [" + str(player_health) + "]")
         print("Monster Health: [" + str(combatant_health) + "]")
-
-        print("Type: RUN, CAST [health_reserves], or USE [weapons]") # gotta write code for cast
-        move = input().lower().split() # converts move into a lower-case list to deal with each item in list separately
+        
+        # gotta write code for cast
+        print("Type: RUN, CAST" + str(spellbook) + " or USE" + str(weapons)) 
+        # converts move into a lower-case list to deal with each item in list separately
+        move = input().lower().split()
         combatant_damage = sum(dice.roll(humans[combatant_ID]['damage']))
         print("\n=========================")
 
@@ -61,9 +69,15 @@ def _CQC():
 
         if move[0] == 'cast': #
             if move[1] in spellbook: # checks if spell is in your spellbook
-                if move[1].lower() == 'Skoal Wintergreen dip':
+                if move[1].lower() == 'skoal wintergreen dip':
                     player_damage = sum(dice.roll(spell_lookup[move[1]]['damage']))
                     print(f"Take the dip {humans[combatant_ID]['name']} for {player_damage} damage!")
+                if move[1].lower() == 'white muscle shirt':
+                    player_damage = sum(dice.roll(spell_lookup[move[1]]['damage']))
+                    print(f"With the power of my white muscle shirt I attack  {humans[combatant_ID]['name']} for {player_damage} damage!")
+                if move[1].lower() == 'self-esteem':                               
+                    player_damage = sum(dice.roll(spell_lookup[move[1]]['damage']))         
+                    print(f"I passed the pt test, take that  {humans[combatant_ID]['name']} for {player_damage} damage!")       
             if move[1] not in spellbook:
                 print(f"You don't know the {move[1]} !")
 
@@ -85,7 +99,7 @@ def _CQC():
                     print("\nGAME OVER")
                     sys.exit()
             if escape_chance >= 0:
-                print("The Dependa out-maneuvers you and attacks! You do not escape.")
+                print("The " + str(humans) + "out-maneuvers you and attacks! You do not escape.")
 
         try:
             combatant_health -= int(player_damage)
@@ -105,16 +119,23 @@ def _CQC():
             sys.exit()
 
 
+def hippo_pic(filename):     
+    with open("/home/student/mycode/projects/"+filename, "r") as hippo: 
+        print(hippo.read())
+                      
+
+
 
 def show_Instructions():
-  #print a main menu and the commands
-  print('''
+    #print a main menu and the commands
+    print('''
 Surviving Enlisted Housing
 =======
 Commands:
   go [north, east, south, west]
   get [item, spell]
 ''')
+    hippo_pic("start_game.txt")   
 
 
 def player_status():
@@ -153,8 +174,8 @@ rooms = {
             'Lifted F-150 Diesel' : {
                   'south' : 'Road',
                   'west'  : 'Yard',
-                  'item'  : 'skoal wintergreen dip',
-                  'item_desc' : 'back pocket of jeans',
+                  'spell'  : 'skoal wintergreen dip',
+                  'spell_desc' : 'back pocket of jeans',
                   'desc' : 'You\'re Affliction shirt matches with your truck. You can go south to the road or west to your yard',
                   'random_CQC' : 0, 
                 },
@@ -187,6 +208,8 @@ rooms = {
                 'north' : 'Kitchen',
                 'south' : 'Living Room',
                 'west' : 'Hall',
+                'item' : 'white muscle shirt',
+                'item_desc': 'You\'re white muscle shirt can be used to attack',
                 'desc' : 'You\'re house was built before WWII and the mold is older than your grand-father. You can go north to the Kitchen, south to the Living room, or west to the hall.',
                 'random_CQC' : 60,
                 },
@@ -215,8 +238,8 @@ rooms = {
                   'west' : 'Office',
                   'south' : 'Bedroom',
                   'east' : 'Living Room',
-                  'item' : 'monster energy drink',
-                  'item_desc' : 'Monster Energy Drink gives energy and health',
+                  'item' : 'self-esteem',
+                  'item_desc' : 'Self-esteem can be used to attack',
                   'desc' : 'A dark valley that takes you to your Bedroom or the office.',
                   'random_CQC' : 0,
                },
@@ -268,16 +291,16 @@ while True:
     os.system('clear')
     # if they type 'go' first
     if move[0] == 'go':
-      # check that they are allowed wherever they want to go
-      if move[1] in rooms[current_Room]:
-          # set the current room to the new room
-          current_Room = rooms[current_Room][move[1]]
-          if 'desc' in rooms[current_Room]:
-              print(rooms[current_Room]['desc'])
-          random_encounter()
-         #there is no door (link) to the new room
-          else:
-              print('You can\'t go that way!')
+        # check that they are allowed wherever they want to go
+        if move[1] in rooms[current_Room]:
+            # set the current room to the new room
+            current_Room = rooms[current_Room][move[1]]
+            if 'desc' in rooms[current_Room]:
+                print(rooms[current_Room]['desc'])
+                random_encounter()
+            #there is no door (link) to the new room
+            else:
+                print('You can\'t go that way!')
 
     # if they type 'get' first
     if move[0] == 'get' :
@@ -297,9 +320,12 @@ while True:
     # Define how a player can win
     if current_Room == 'Road':
         print('You escaped Enlisted Housing!!! You have now traded your truck for a 2006 Mustang with a 28% APR!!')
+        hippo_pic("game_over.txt") 
         break
 
     # If a player enters a room with a monster
     elif 'item' in rooms[current_Room] and 'monster' in rooms[current_Room]['item']:
         print('A monster has got you... GAME OVER!')
+        hippo_pic("hippo.txt")
+        hippo_pic("game_over.txt")
         break
