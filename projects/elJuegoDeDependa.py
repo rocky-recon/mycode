@@ -19,13 +19,13 @@ rom the evil Dependapotamus """
 humans = [{'name' : 'Dependapotamus', 'health' : 100, 'damage' : '1d6'},
           {'name' : 'Child', 'health' : 10, 'damage' : '1d4'}]
 weapons = [{'dog poop' : {'damage' : '1d12'}},
-           {'PS4' : {'damage' : '1d5'}}, 
-           {'Xbox' : {'damage' : '1d5'}}]
-spell_lookup = [{'Skoal Wintergreen dip' : {'armor' : '1d12'}},
-          {'Whitebeater' : {'armor' : '1d24'}},
+           {'ps4' : {'damage' : '1d5'}}, 
+           {'xbox' : {'damage' : '1d5'}}]
+spell_lookup = [{'skoal wintergreen dip' : {'armor' : '1d12'}},
+          {'white muscle shirt' : {'armor' : '1d24'}},
           {'self-esteem' : {'armor' : '1d5'}}]
-health = [{'Monster Energy Drink' : {'health' : '1d4'}},
-        {'Taco Bell' : {'health' : '1d4'}}]
+health = [{'monster energy drink' : {'health' : '1d4'}},
+        {'taco bell' : {'health' : '1d4'}}]
 
 player_health = 5
 inventory = []
@@ -106,7 +106,7 @@ def _CQC():
 
 
 
-def showInstructions():
+def show_Instructions():
   #print a main menu and the commands
   print('''
 Surviving Enlisted Housing
@@ -131,6 +131,8 @@ def player_status():
 
 
 def show_Status():
+    if 'desc' in rooms[current_Room]:
+        print(rooms[current_Room]['desc'])
     if 'item' in rooms[current_Room]:
         print('You see a ' + rooms[current_Room]['item'] + '.')
     if 'spell' in rooms[current_Room]:
@@ -138,7 +140,7 @@ def show_Status():
     print('========================================')    
 
 def random_encounter():
-    if((int(rooms[current_Room]['random_CQC'])) + 5) >= 10:
+    if((int(rooms[current_Room]['random_CQC'])) + 5) > 10:
         _CQC()
     
 #an inventory, which is initially empty
@@ -151,9 +153,9 @@ rooms = {
             'Lifted F-150 Diesel' : {
                   'south' : 'Road',
                   'west'  : 'Yard',
-                  'item'  : 'Skoal Wintergreen dip',
+                  'item'  : 'skoal wintergreen dip',
                   'item_desc' : 'back pocket of jeans',
-                  'desc' : 'You\'re Affliction shirt matches with your truck',
+                  'desc' : 'You\'re Affliction shirt matches with your truck. You can go south to the road or west to your yard',
                   'random_CQC' : 0, 
                 },
 
@@ -167,15 +169,15 @@ rooms = {
                 'west' : 'House',
                 'item' : 'dog poop',
                 'item_desc' : 'The chihuahua strikes again',
-                'desc' : 'The hose is long and flexible but welded to the faucet',
-                'random_CQC' : 10,
+                'desc' : 'There are toys on the ground. You can go south to the Shed or west to the House.',
+                'random_CQC' : 30,
                 },
 
             'Shed' : {
                 'west' : 'Shed',
                 'item' : 'chair',
                 'item_desc' : 'The chair is only here for moral support',
-                'desc' : 'The Shed has been here for years and offers moral support',
+                'desc' : 'The Shed has been here for years and offers moral support.',
                 'random_CQC' : 0,
                 },
             
@@ -185,46 +187,49 @@ rooms = {
                 'north' : 'Kitchen',
                 'south' : 'Living Room',
                 'west' : 'Hall',
-                'desc' : 'You\'re house was built before WWII and the mold is older than your grand-father',
-                'random_CQC' : 20,
+                'desc' : 'You\'re house was built before WWII and the mold is older than your grand-father. You can go north to the Kitchen, south to the Living room, or west to the hall.',
+                'random_CQC' : 60,
                 },
-
 
             'Kitchen' : {
                   'south' : 'Living Room',
                   'north' : 'Door',
-                  'item'  : 'Monster Energy Drink',
+                  'item'  : 'monster energy drink',
                   'item_desc' : 'Monster Energy Drink gives energy but hurts your health',
-                  'desc' : 'The fride door is open and somehow there is PB&J on the ceiling',
+                  'desc' : 'The fride door is open and somehow there is PB&J on the ceiling. You can go south to the Living Room or north through a Door',
                   'random_CQC' : 50,
                 },
 
 
             'Living Room' : {
                   'west' : 'Hall',
-                  'item' : 'Taco Bell',
+                  'north': 'Kitchen',
+                  'east' : 'Yard',
+                  'item' : 'taco bell',
                   'item_desc' : 'Taco Bell attacks your gut!!!',
-                  'desc' : 'Live, Love, Laugh',
+                  'desc' : 'Live, Love, Laugh is on the wall. You can go west to the Hall',
                   'random_CQC' : 40,
                },
+
             'Hall' : {
                   'west' : 'Office',
                   'south' : 'Bedroom',
-                  'item' : 'Monster Energy Drink',
-                  'item_desc' : 'Monster Energy Drink gives energy but hurts yo    ur health',
-                  'desc' : 'A dark valley that takes you to your Bedroom',
+                  'east' : 'Living Room',
+                  'item' : 'monster energy drink',
+                  'item_desc' : 'Monster Energy Drink gives energy and health',
+                  'desc' : 'A dark valley that takes you to your Bedroom or the office.',
                   'random_CQC' : 0,
                },
 
             'Office' : {
                     'north' : 'Kitchen',
-                    'item' : 'XBOX',
+                    'item' : 'xbox',
                     'desc' : 'You have decided to hide and play COD',
                     },
             
             
             'Bedroom' : { 
-                  'item' : 'PS4',
+                  'item' : 'ps4',
                   'item_desc' : 'Play video games to avoid responsibilities',
                   'desc' : 'The place you lost your soul',
                   'random_CQC' : 100,
@@ -236,64 +241,65 @@ rooms = {
 current_Room = 'Lifted F-150 Diesel'
 
 # Show directions user can go to
-current_Directions = 'north, east, south, west'
+current_Directions = 'north, east, south, and west'
 
 # Show current health levels
 current_Health_Levels = player_health
 
-showInstructions()
 
-#loop forever
+show_Instructions()
+
+# loop forever
 while True:
-    player_status
+    player_status()
     show_Status()
 
-  #get the player's next 'move'
-  #.split() breaks it up into an list array
-  #eg typing 'go east' would give the list:
-  #['go','east']
+   # get the player's next 'move'
+   # .split() breaks it up into an list array
+   # eg typing 'go east' would give the list:
+   # ['go','east']
     move = ''
     while move == '':
         move = input('>')
 
-  # split allows an items to have a space on them
-  # get golden key is returned ["get", "golden key"]          
+    # split allows an items to have a space on them
+    # get golden key is returned ["get", "golden key"]          
     move = move.lower().split(" ", 1)
     os.system('clear')
-  #if they type 'go' first
+    # if they type 'go' first
     if move[0] == 'go':
-    #check that they are allowed wherever they want to go
+      # check that they are allowed wherever they want to go
       if move[1] in rooms[current_Room]:
-      #set the current room to the new room
-        current_Room = rooms[current_Room][move[1]]
-        if 'desc' in rooms[current_Room]:
-            print(rooms[current_Room]['desc'])
-        random_encounter()
-    #there is no door (link) to the new room
-      else:
-          print('You can\'t go that way!')
+          # set the current room to the new room
+          current_Room = rooms[current_Room][move[1]]
+          if 'desc' in rooms[current_Room]:
+              print(rooms[current_Room]['desc'])
+          random_encounter()
+         #there is no door (link) to the new room
+          else:
+              print('You can\'t go that way!')
 
-  #if they type 'get' first
+    # if they type 'get' first
     if move[0] == 'get' :
-    #if the room contains an item, and the item is the one they want to get
+        # if the room contains an item, and the item is the one they want to get
         if "item" in rooms[current_Room] and move[1] in rooms[current_Room]['item']:
-      #add the item to their inventory
-          inventory += [move[1]]
-      #display a helpful message
-          print(move[1] + ' got!')
-      #delete the item from the room
-          del rooms[current_Room]['item']
-    #otherwise, if the item isn't there to get
-    else:
-      #tell them they can't get it
-        print('Can\'t get ' + move[1] + '!')
+            # add the item to their inventory
+            inventory += [move[1]]
+            # display a helpful message
+            print(move[1] + ' got!')
+            # delete the item from the room
+            del rooms[current_Room]['item']
+        # otherwise, if the item isn't there to get
+        else:
+            # tell them they can't get it
+            print('Can\'t get ' + move[1] + '!')
       
-  ## Define how a player can win
+    # Define how a player can win
     if current_Room == 'Road':
         print('You escaped Enlisted Housing!!! You have now traded your truck for a 2006 Mustang with a 28% APR!!')
         break
 
-  ## If a player enters a room with a monster
+    # If a player enters a room with a monster
     elif 'item' in rooms[current_Room] and 'monster' in rooms[current_Room]['item']:
         print('A monster has got you... GAME OVER!')
         break
