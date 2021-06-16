@@ -157,7 +157,7 @@ def show_Status():
     if 'item' in rooms[current_Room]:
         print('You see a ' + rooms[current_Room]['item'] + '.')
     if 'spell' in rooms[current_Room]:
-        print('You see you\'re helpful "' + rooms[current_Room]['spell'] + '".')
+        print('You see you\'re helpful ' + rooms[current_Room]['spell'] + '.')
     print('========================================')    
 
 def random_encounter():
@@ -208,8 +208,8 @@ rooms = {
                 'north' : 'Kitchen',
                 'south' : 'Living Room',
                 'west' : 'Hall',
-                'item' : 'white muscle shirt',
-                'item_desc': 'You\'re white muscle shirt can be used to attack',
+                'spell' : 'white muscle shirt',
+                'spell_desc': 'You\'re white muscle shirt can be used to attack',
                 'desc' : 'You\'re house was built before WWII and the mold is older than your grand-father. You can go north to the Kitchen, south to the Living room, or west to the hall.',
                 'random_CQC' : 60,
                 },
@@ -217,8 +217,8 @@ rooms = {
             'Kitchen' : {
                   'south' : 'Living Room',
                   'north' : 'Door',
-                  'item'  : 'monster energy drink',
-                  'item_desc' : 'Monster Energy Drink gives energy but hurts your health',
+                  'health'  : 'monster energy drink',
+                  'health_desc' : 'Monster Energy Drink gives energy but hurts your health',
                   'desc' : 'The fride door is open and somehow there is PB&J on the ceiling. You can go south to the Living Room or north through a Door',
                   'random_CQC' : 50,
                 },
@@ -228,8 +228,8 @@ rooms = {
                   'west' : 'Hall',
                   'north': 'Kitchen',
                   'east' : 'Yard',
-                  'item' : 'taco bell',
-                  'item_desc' : 'Taco Bell attacks your gut!!!',
+                  'health' : 'taco bell',
+                  'health_desc' : 'Taco Bell attacks your gut!!!',
                   'desc' : 'Live, Love, Laugh is on the wall. You can go west to the Hall',
                   'random_CQC' : 40,
                },
@@ -238,16 +238,16 @@ rooms = {
                   'west' : 'Office',
                   'south' : 'Bedroom',
                   'east' : 'Living Room',
-                  'item' : 'self-esteem',
-                  'item_desc' : 'Self-esteem can be used to attack',
-                  'desc' : 'A dark valley that takes you to your Bedroom or the office.',
+                  'spell' : 'self-esteem',
+                  'spell_desc' : 'Self-esteem can be used to attack',
+                  'desc' : 'A dark valley that takes you to your Bedroom or the office. You can go west, south , or east',
                   'random_CQC' : 0,
                },
 
             'Office' : {
                     'north' : 'Kitchen',
                     'item' : 'xbox',
-                    'desc' : 'You have decided to hide and play COD',
+                    'item_desc' : 'You have decided to hide and play COD',
                     },
             
             
@@ -310,13 +310,25 @@ while True:
             inventory += [move[1]]
             # display a helpful message
             print(move[1] + ' got!')
+            player_status()
             # delete the item from the room
             del rooms[current_Room]['item']
         # otherwise, if the item isn't there to get
         else:
             # tell them they can't get it
-            print('Can\'t get ' + move[1] + '!')
-      
+            print('Can\'t get ' + move[1] + '!')\
+    
+    # if they type 'grab'first
+    if move[0] == 'grab' :
+        # if the room contains a spell, and the the spell is the one they want to grab
+        if "spell" in rooms[current_Room] and move[1] in rooms[current_Room]['spell']:
+            spellbook += [move[1]]
+            print(move[1] + ' grabbed!')
+            player_status()
+            del rooms[current_Room]['spell']
+        else:
+            print('Can\'t grab ' + move[1] + '!')
+
     # Define how a player can win
     if current_Room == 'Road':
         print('You escaped Enlisted Housing!!! You have now traded your truck for a 2006 Mustang with a 28% APR!!')
