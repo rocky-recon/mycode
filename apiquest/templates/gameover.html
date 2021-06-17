@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<h1>
+    <meta charset="UTF-8">
+    {% if endreason == "lost" %}
+    <title>Game Over</title>
+    <h3><p>You Lost</p></h3>
+    {% elif endreason == "win" %}
+    <title>You Win</title>
+    <h3><p>You Won</p></h3>
+    {% endif %}
+
+    <h3><p>{{endmeta}}</p></h3>
+    <p>Click below to start a new game.</p>
+</head>
+<body>
+
+<form action = "/new" method="post">
+    <p><input type="hidden" name="neworcontinue" value="newgame"></p>
+    <p><input type="submit" value="New Game"></p>
+</form>
+
+</body>
+</html>
