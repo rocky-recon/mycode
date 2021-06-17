@@ -55,7 +55,7 @@ def _CQC():
         # gotta write code for cast
         print("Type: RUN, CAST" + str(spellbook) + " or USE" + str(weapons)) 
         # converts move into a lower-case list to deal with each item in list separately
-        move = input().lower().split()
+        move = input().lower().split(" ", 1)
         combatant_damage = sum(dice.roll(humans[combatant_ID]['damage']))
         print("\n=========================")
 
@@ -88,7 +88,7 @@ def _CQC():
                 print("Someone has been doing PT!")
                 break
             if escape_chance >= 5:
-                print("You expose your back as you turn and flee- the Dependa takes advantage.")
+                print("You expose your back as you turn and flee- the {humans[combatan_ID]['name']} takes advantage.")
                 print(f"A {humans[combatant_ID]['name']} hits you for {combatant_damage} damage!")
                 player_health -= int(combatant_damage)
                 if player_health >= 1:
@@ -120,13 +120,14 @@ def _CQC():
 
 
 def hippo_pic(filename):     
-    with open("/home/student/mycode/projects/"+filename, "r") as hippo: 
+    with open("/home/student/mycode/projects/" + filename, "r") as hippo: 
         print(hippo.read())
                       
 
 
 
 def show_Instructions():
+    hippo_pic("start_game.txt")
     #print a main menu and the commands
     print('''
 Surviving Enlisted Housing
@@ -135,29 +136,31 @@ Commands:
   go [north, east, south, west]
   get [item, spell]
 ''')
-    hippo_pic("start_game.txt")   
 
 
 def player_status():
     #print the player's current status
     print('---------------------------')
+    print('Surviving Enlisted Housing')
     print('You are in the ' + current_Room)
-    print('You can go ' + current_Directions)
     #print the current inventory
     print('Inventory : ' + str(inventory))
     #print the current spellbook
     print('Spellbook : ' + str(spellbook))
+    print('Health Reserve : ' + str(health_reserves))
     print('You\'re current health levels is ' + str(current_Health_Levels)) 
     print("---------------------------")
 
 
 def show_Status():
     if 'desc' in rooms[current_Room]:
-        print(rooms[current_Room]['desc'])
+        print(rooms[current_Room]['desc'] + 'use go.')
     if 'item' in rooms[current_Room]:
-        print('You see a ' + rooms[current_Room]['item'] + '.')
+        print('You see a ' + rooms[current_Room]['item'] + 'use get.')
     if 'spell' in rooms[current_Room]:
-        print('You see you\'re helpful ' + rooms[current_Room]['spell'] + '.')
+        print('You see you\'re helpful ' + rooms[current_Room]['spell'] + 'use grab.')
+    if 'health' in rooms[current_Room]:
+        print('You see' + rooms[current_Room]['health'] + 'use take.')
     print('========================================')    
 
 def random_encounter():
@@ -173,11 +176,12 @@ rooms = {
 
             'Lifted F-150 Diesel' : {
                   'south' : 'Road',
-                  'west'  : 'Yard',
+                  'east'  : 'Yard',
                   'spell'  : 'skoal wintergreen dip',
                   'spell_desc' : 'back pocket of jeans',
-                  'desc' : 'You\'re Affliction shirt matches with your truck. You can go south to the road or west to your yard',
-                  'random_CQC' : 0, 
+                  'desc' : 'You\'re Affliction shirt matches with your truck. You can go south to the road or east to your yard',
+                  'random_CQC' : 0,
+                  'pic' : hippo_pic("truck_map.txt"),
                 },
 
             'Road' : {
@@ -192,6 +196,7 @@ rooms = {
                 'item_desc' : 'The chihuahua strikes again',
                 'desc' : 'There are toys on the ground. You can go south to the Shed or west to the House.',
                 'random_CQC' : 30,
+                'pic' : hippo_pic("yard_map.txt"),
                 },
 
             'Shed' : {
@@ -212,8 +217,9 @@ rooms = {
                 'spell_desc': 'You\'re white muscle shirt can be used to attack',
                 'desc' : 'You\'re house was built before WWII and the mold is older than your grand-father. You can go north to the Kitchen, south to the Living room, or west to the hall.',
                 'random_CQC' : 60,
+                'pic' : hippo_pic("house_map.txt"),
                 },
-
+            
             'Kitchen' : {
                   'south' : 'Living Room',
                   'north' : 'Door',
@@ -221,6 +227,7 @@ rooms = {
                   'health_desc' : 'Monster Energy Drink gives energy but hurts your health',
                   'desc' : 'The fride door is open and somehow there is PB&J on the ceiling. You can go south to the Living Room or north through a Door',
                   'random_CQC' : 50,
+                  'pic' : hippo_pic("kitche_map.txt"),
                 },
 
 
@@ -240,7 +247,7 @@ rooms = {
                   'east' : 'Living Room',
                   'spell' : 'self-esteem',
                   'spell_desc' : 'Self-esteem can be used to attack',
-                  'desc' : 'A dark valley that takes you to your Bedroom or the office. You can go west, south , or east',
+                  'desc' : 'A dark valley that takes you to your Bedroom or the office. You can go west to the Office, south to the Bedroom, or east to the living room',
                   'random_CQC' : 0,
                },
 
@@ -270,7 +277,7 @@ current_Directions = 'north, east, south, and west'
 current_Health_Levels = player_health
 
 
-show_Instructions()
+#show_Instructions()
 
 # loop forever
 while True:
@@ -328,7 +335,18 @@ while True:
             del rooms[current_Room]['spell']
         else:
             print('Can\'t grab ' + move[1] + '!')
-
+    
+    # if they take 'take' first
+    if move[0] == 'take' :
+        # if the room contains additional health for user to grab
+        if "health" in rooms[current_Room] and move[1] in rooms[current_room]['health']:
+            health_reserves += [move[1]]
+            print(move[1] + ' taken!')
+            player_status()
+            del rooms[current_Room]['health']
+        else:
+            print('Can\'t take ' + move[1] + '!')
+            
     # Define how a player can win
     if current_Room == 'Road':
         print('You escaped Enlisted Housing!!! You have now traded your truck for a 2006 Mustang with a 28% APR!!')
