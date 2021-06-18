@@ -102,7 +102,7 @@ def _CQC():
                 print("Someone has been doing PT!")
                 break
             if escape_chance >= 5:
-                print("You expose your back as you turn and flee- the {humans[combatan_ID]['name']} takes advantage.")
+                print("You expose your back as you turn and flee- the {humans[combatant_ID]['name']} takes advantage.")
                 print(f"A {humans[combatant_ID]['name']} hits you for {combatant_damage} damage!")
                 player_health -= int(combatant_damage)
                 if player_health >= 1:
