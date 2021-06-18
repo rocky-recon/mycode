@@ -21,17 +21,17 @@ rom the evil Dependapotamus """
 
 '''The User health is low from working in the military.'''
 
-humans = [{'name' : 'dependapotamus', 'health' : 100, 'damage' : '1d6'},
-          {'name' : 'child', 'health' : 10, 'damage' : '1d4'},
+humans = [{'name' : 'Dependapotamus', 'health' : 100, 'damage' : '1d6'},
+          {'name' : 'Dependapotamus friend', 'health' : 10, 'damage' : '1d4'},
           {'name': 'dog', 'health' : 50, 'damage' : '1d4'},]
-weapons = [{'dog poop' : {'damage' : '1d12'}},
-           {'ps4' : {'damage' : '1d5'}}, 
-           {'xbox' : {'damage' : '1d5'}},]
-spell_lookup = [{'skoal wintergreen dip' : {'damage' : '1d12'}},
-          {'white muscle shirt' : {'damage' : '1d24'}},
-          {'self-esteem' : {'damage' : '1d5'}},]
-health = [{'monster energy drink' : {'health' : '1d4'}},
-        {'taco bell' : {'health' : '1d4'}},]
+weapons = {'dog poop' : {'damage' : '1d12'},
+           'ps4' : {'damage' : '1d5'}, 
+           'xbox' : {'damage' : '1d5'}}
+spell_lookup = {'skoal wintergreen dip' : {'damage' : '1d12'},
+                'white muscle shirt' : {'damage' : '1d24'},
+                'self-esteem' : {'damage' : '1d5'}}
+health = {'monster energy drink' : {'health' : '1d4'},
+          'taco bell' : {'health' : '1d4'}}
 
 player_health = 45
 inventory = []
@@ -53,7 +53,7 @@ def _CQC():
         print("Monster Health: [" + str(combatant_health) + "]")
         
         # gotta write code for cast
-        print("Type: RUN, CAST" + str(spellbook) + " or USE" + str(weapons)) 
+        print("Type: RUN, CAST," + str(spellbook) + " USE," + str(inventory) + " Or CONSUME" + str(health_reserves)) 
         # converts move into a lower-case list to deal with each item in list separately
         move = input().lower().split(" ", 1)
         combatant_damage = sum(dice.roll(humans[combatant_ID]['damage']))
@@ -62,7 +62,7 @@ def _CQC():
 
         if move[0] == 'use': #
             if move[1] in inventory: # checks if weapon is in your inventory
-                player_damage = dice.roll(armory[move[1]]['damage'])
+                player_damage = dice.roll(weapons[move[1]]['damage'])
                 print(f"You hit a {humans[combatant_ID]['name']} for {player_damage} damage!")
             if move[1] not in inventory:
                 print(f"There is no {move[1]} in your inventory!")
@@ -70,6 +70,9 @@ def _CQC():
         if move[0] == 'cast': #
             if move[1] in spellbook: # checks if spell is in your spellbook
                 if move[1].lower() == 'skoal wintergreen dip':
+                                               # missing a slice in the spell_lookup line
+                                               # spell_lookup is a list of dictionaries
+
                     player_damage = sum(dice.roll(spell_lookup[move[1]]['damage']))
                     print(f"Take the dip {humans[combatant_ID]['name']} for {player_damage} damage!")
                 if move[1].lower() == 'white muscle shirt':
@@ -80,6 +83,16 @@ def _CQC():
                     print(f"I passed the pt test, take that  {humans[combatant_ID]['name']} for {player_damage} damage!")       
             if move[1] not in spellbook:
                 print(f"You don't know the {move[1]} !")
+
+        if move[0] == 'consume':
+            if move[1] in health_reserves:
+                player_damage = dice.roll(weapons[move[1]]['health'])
+                print(f"You consumed {move[1]} in your health reserves!")
+            if move[1] not in inventory:
+                print(f"There is no {move[1]} in your health reserves!")
+
+
+                        
 
         if move[0] == 'run': #
             escape_chance= randint(1,10) #+ player_speed # if I set this variable later, here's where it would work
@@ -121,7 +134,7 @@ def _CQC():
 
 def hippo_pic(filename):     
     with open("/home/student/mycode/projects/" + filename, "r") as hippo: 
-        print(hippo.read())
+        return hippo.read()
                       
 
 
@@ -153,18 +166,20 @@ def player_status():
 
 
 def show_Status():
+    if 'pic' in rooms[current_Room]:
+        print(rooms[current_Room]['pic'])
     if 'desc' in rooms[current_Room]:
-        print(rooms[current_Room]['desc'] + 'use go.')
+        print(rooms[current_Room]['desc'] + ' use go.')
     if 'item' in rooms[current_Room]:
-        print('You see a ' + rooms[current_Room]['item'] + 'use get.')
+        print('You see a ' + rooms[current_Room]['item'] + ' use get.')
     if 'spell' in rooms[current_Room]:
-        print('You see you\'re helpful ' + rooms[current_Room]['spell'] + 'use grab.')
+        print('You see you\'re helpful ' + rooms[current_Room]['spell'] + ' use grab.')
     if 'health' in rooms[current_Room]:
-        print('You see' + rooms[current_Room]['health'] + 'use take.')
+        print('You see' + rooms[current_Room]['health'] + ' use take.')
     print('========================================')    
 
 def random_encounter():
-    if((int(rooms[current_Room]['random_CQC'])) + 5) > 10:
+    if((int(rooms[current_Room]['random_CQC'])) + 5) > 1:
         _CQC()
     
 #an inventory, which is initially empty
@@ -175,13 +190,13 @@ def random_encounter():
 rooms = {
 
             'Lifted F-150 Diesel' : {
-                  'south' : 'Road',
-                  'east'  : 'Yard',
-                  'spell'  : 'skoal wintergreen dip',
-                  'spell_desc' : 'back pocket of jeans',
-                  'desc' : 'You\'re Affliction shirt matches with your truck. You can go south to the road or east to your yard',
-                  'random_CQC' : 0,
-                  'pic' : hippo_pic("truck_map.txt"),
+                'south' : 'Road',
+                'east'  : 'Yard',
+                'spell'  : 'skoal wintergreen dip',
+                'spell_desc' : 'back pocket of jeans',
+                'desc' : 'You\'re Affliction shirt matches with your truck. You can go south to the road or east to your yard',
+                'random_CQC' : 0,
+                'pic' : hippo_pic("truck_map.txt"),
                 },
 
             'Road' : {
@@ -221,49 +236,49 @@ rooms = {
                 },
             
             'Kitchen' : {
-                  'south' : 'Living Room',
-                  'north' : 'Door',
-                  'health'  : 'monster energy drink',
-                  'health_desc' : 'Monster Energy Drink gives energy but hurts your health',
-                  'desc' : 'The fride door is open and somehow there is PB&J on the ceiling. You can go south to the Living Room or north through a Door',
-                  'random_CQC' : 50,
-                  'pic' : hippo_pic("kitche_map.txt"),
+                'south' : 'Living Room',
+                'north' : 'Door',
+                'health'  : 'monster energy drink',
+                'health_desc' : 'Monster Energy Drink gives energy but hurts your health',
+                'desc' : 'The fride door is open and somehow there is PB&J on the ceiling. You can go south to the Living Room or north through a Door',
+                'random_CQC' : 50,
+                'pic' : hippo_pic("kitche_map.txt"),
                 },
 
 
             'Living Room' : {
-                  'west' : 'Hall',
-                  'north': 'Kitchen',
-                  'east' : 'Yard',
-                  'health' : 'taco bell',
-                  'health_desc' : 'Taco Bell attacks your gut!!!',
-                  'desc' : 'Live, Love, Laugh is on the wall. You can go west to the Hall',
-                  'random_CQC' : 40,
+                'west' : 'Hall',
+                'north': 'Kitchen',
+                'east' : 'Yard',
+                'health' : 'taco bell',
+                'health_desc' : 'Taco Bell attacks your gut!!!',
+                'desc' : 'Live, Love, Laugh is on the wall. You can go west to the Hall',
+                'random_CQC' : 40,
                },
 
             'Hall' : {
-                  'west' : 'Office',
-                  'south' : 'Bedroom',
-                  'east' : 'Living Room',
-                  'spell' : 'self-esteem',
-                  'spell_desc' : 'Self-esteem can be used to attack',
-                  'desc' : 'A dark valley that takes you to your Bedroom or the office. You can go west to the Office, south to the Bedroom, or east to the living room',
-                  'random_CQC' : 0,
+                'west' : 'Office',
+                'south' : 'Bedroom',
+                'east' : 'Living Room',
+                'spell' : 'self-esteem',
+                'spell_desc' : 'Self-esteem can be used to attack',
+                'desc' : 'A dark valley that takes you to your Bedroom or the office. You can go west to the Office, south to the Bedroom, or east to the living room',
+                'random_CQC' : 0,
                },
 
             'Office' : {
-                    'north' : 'Kitchen',
-                    'item' : 'xbox',
-                    'item_desc' : 'You have decided to hide and play COD',
+                'north' : 'Kitchen',
+                'item' : 'xbox',
+                'item_desc' : 'You have decided to hide and play COD',
                     },
             
             
             'Bedroom' : { 
-                  'item' : 'ps4',
-                  'item_desc' : 'Play video games to avoid responsibilities',
-                  'desc' : 'The place you lost your soul',
-                  'random_CQC' : 100,
-
+                'item' : 'ps4',
+                'item_desc' : 'Play video games to avoid responsibilities',
+                'desc' : 'The place you lost your soul',
+                'random_CQC' : 100,
+                'pic' : hippo_pic("hippo.txt"),
            },
          }
 
@@ -271,7 +286,7 @@ rooms = {
 current_Room = 'Lifted F-150 Diesel'
 
 # Show directions user can go to
-current_Directions = 'north, east, south, and west'
+#current_Directions = 'north, east, south, and west'
 
 # Show current health levels
 current_Health_Levels = player_health
