@@ -22,7 +22,8 @@ rom the evil Dependapotamus """
 '''The User health is low from working in the military.'''
 
 humans = [{'name' : 'Dependapotamus', 'health' : 100, 'damage' : '1d6'},
-          {'name' : 'Dependapotamus friend', 'health' : 10, 'damage' : '1d4'},
+          {'name' : 'Military Police', 'health' : 10, 'damage' : '1d4'},
+          {'name' : 'Clueless Neighbor', 'health' : 50, 'damage' : '1d4'},
           {'name': 'dog', 'health' : 50, 'damage' : '1d4'},]
 weapons = {'dog poop' : {'damage' : '1d12'},
            'ps4' : {'damage' : '1d5'}, 
@@ -175,7 +176,7 @@ def show_Status():
     if 'spell' in rooms[current_Room]:
         print('You see you\'re helpful ' + rooms[current_Room]['spell'] + ' use grab.')
     if 'health' in rooms[current_Room]:
-        print('You see' + rooms[current_Room]['health'] + ' use take.')
+        print('You see ' + rooms[current_Room]['health'] + ' use take.')
     print('========================================')    
 
 def random_encounter():
@@ -195,6 +196,7 @@ rooms = {
                 'spell'  : 'skoal wintergreen dip',
                 'spell_desc' : 'back pocket of jeans',
                 'desc' : 'You\'re Affliction shirt matches with your truck. You can go south to the road or east to your yard',
+                'health'  : 'monster energy drink',                                            'health_desc' : 'Monster Energy Drink gives energy but hurts your health',
                 'random_CQC' : 0,
                 'pic' : hippo_pic("truck_map.txt"),
                 },
@@ -231,6 +233,8 @@ rooms = {
                 'spell' : 'white muscle shirt',
                 'spell_desc': 'You\'re white muscle shirt can be used to attack',
                 'desc' : 'You\'re house was built before WWII and the mold is older than your grand-father. You can go north to the Kitchen, south to the Living room, or west to the hall.',
+                'health' : 'taco bell',                          
+                'health_desc' : 'Taco Bell attacks your gut!!!',
                 'random_CQC' : 60,
                 'pic' : hippo_pic("house_map.txt"),
                 },
@@ -354,7 +358,7 @@ while True:
     # if they take 'take' first
     if move[0] == 'take' :
         # if the room contains additional health for user to grab
-        if "health" in rooms[current_Room] and move[1] in rooms[current_room]['health']:
+        if "health" in rooms[current_Room] and move[1] in rooms[current_Room]['health']:
             health_reserves += [move[1]]
             print(move[1] + ' taken!')
             player_status()
